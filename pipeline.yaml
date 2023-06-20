@@ -1,0 +1,2 @@
+- pipeline.id: tracer
+  path.config: "config/logstash-tracer.conf"
