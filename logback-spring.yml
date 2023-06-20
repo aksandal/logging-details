@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE_1" class="ch.qos.logback.core.FileAppender">
+        <file> tracer.log </file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p --- [%t] [%X{groupId}] [%X{stackId}] [%X{status}] %-40.40logger{39} : %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE_2" class="ch.qos.logback.core.FileAppender">
+        <file> server.log </file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p --- [%t] %-40.40logger{39} : %m%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE_2" />
+    </root>
+
+    <logger name="com.example.firstrestapi.LoggingAspect" level="info" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE_1" />
+    </logger>
+</configuration>
