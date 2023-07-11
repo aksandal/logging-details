@@ -22,37 +22,24 @@ public class LoggingAspect {
 
     @Around("applicationPackagePointcut() || pointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        String id=Math.random()+"";
-        MDC.put("groupId",id);
-        if(MDC.get("stackId")==null){
-            MDC.put("stackId",MDC.get("stackId")==null?"1":(MDC.get("stackId")+"1"));
+        if(Objects.isNull(MDC.get("groupId"))){
+            String id=TestingUtil.randomStringGenerator();
+            MDC.put("groupId",id);
+        }
+        int stackId=MDC.get("stackId")!=null?Integer.parseInt(MDC.get("stackId"))+1:1;
+        MDC.put("stackId",stackId+"");
+        if(Objects.isNull(MDC.get("seqId"))) {
+            MDC.put("seqId", "1");
+        }else{
+            MDC.put("seqId",(Integer.parseInt(MDC.get("seqId"))+1)+"");
         }
         MDC.put("status","Entry");
         log.info(String.format("%s",joinPoint.getSignature()));
-        //MDC.put("stackId",MDC.get("stackId")==null?"1":(MDC.get("stackId")+"1"));
         Object result = joinPoint.proceed();
-        MDC.put("groupId",id);
         MDC.put("status","Exit");
-        //MDC.put("stackId",MDC.get("stackId").substring(0,MDC.get("stackId").length()-1));
-        MDC.put("stackId",MDC.get("stackId")==null?"1":(MDC.get("stackId")+"1"));
+        MDC.put("stackId",stackId+"");
+        MDC.put("seqId",(Integer.parseInt(MDC.get("seqId"))+1)+"");
         log.info(String.format("%s",joinPoint.getSignature()));
         return result;
-/*        if (log.isDebugEnabled()) {
-            log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
-                    joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
-        }
-        try {
-            log.info(joinPoint.getSignature().toString());
-            Object result = joinPoint.proceed();
-            if (log.isDebugEnabled()) {
-                log.debug("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(),
-                        joinPoint.getSignature().getName(), result);
-            }
-            return result;
-        } catch (IllegalArgumentException e) {
-            log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
-                    joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
-            throw e;
-        }*/
     }
 }
