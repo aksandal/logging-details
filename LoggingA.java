@@ -26,7 +26,13 @@ public class LoggingAspect {
             String id=TestingUtil.randomStringGenerator();
             MDC.put("groupId",id);
         }
-        int stackId=MDC.get("stackId")!=null?Integer.parseInt(MDC.get("stackId"))+1:1;
+        if(Objects.isNull(MDC.get("globalStackId"))){
+            MDC.put("globalStackId","1");
+        }else{
+            MDC.put("globalStackId",(Integer.parseInt(MDC.get("globalStackId"))+1)+"");
+        }
+
+        int stackId=Integer.parseInt(MDC.get("globalStackId"))+1;
         MDC.put("stackId",stackId+"");
         if(Objects.isNull(MDC.get("seqId"))) {
             MDC.put("seqId", "1");
